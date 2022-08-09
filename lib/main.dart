@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: createMaterialColor(const Color(0xFF174378)),
       ),
-      home: Home(),
+      home: const Home(),
     );
   }
 

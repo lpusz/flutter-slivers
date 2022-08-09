@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slivers/shared/main_list.dart';
+import 'package:flutter_slivers/models/post.dart';
+import 'package:flutter_slivers/models/story.dart';
+import 'package:flutter_slivers/shared/post_card.dart';
+import 'package:flutter_slivers/shared/story_card.dart';
+import 'package:uuid/uuid.dart';
 
 class Home extends StatelessWidget {
-  Home({Key? key}) : super(key: key);
+  final Uuid uuid = const Uuid();
+
+  const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +31,9 @@ class Home extends StatelessWidget {
                   icon: const Icon(Icons.ac_unit),
                 )
               ],
-              stretch: true,
-              floating: true,
-              snap: true,
+              // stretch: true,
+              // floating: true,
+              // snap: true,
               pinned: true,
               expandedHeight: 200,
               onStretchTrigger: () async {
@@ -50,61 +56,67 @@ class Home extends StatelessWidget {
         },
         body: CustomScrollView(
           slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                builder,
-                childCount: 20,
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 180,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return StoryCard(
+                      story: Story(
+                        id: index,
+                        imageUrl: 'https://picsum.photos/100/180?${uuid.v4()}',
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(4.0),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return PostCard(
+                      post: Post(id: index),
+                    );
+                  },
+                  childCount: 3,
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 180,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return StoryCard(
+                      story: Story(
+                        id: index,
+                        imageUrl: 'https://picsum.photos/100/180?${uuid.v4()}',
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(4.0),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return PostCard(
+                      post: Post(id: index),
+                    );
+                  },
+                  childCount: 200,
+                ),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget? builder(BuildContext context, int index) {
-    if (index > 0 && index % 4 == 0) {
-      return SliverToBoxAdapter(
-        child: SliverList(
-          delegate: SliverChildListDelegate([
-            Card(
-              color: Colors.blue,
-              elevation: 16,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Test 1'),
-              ),
-            ),
-            Card(
-              color: Colors.blue,
-              elevation: 16,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Test 2'),
-              ),
-            ),
-          ]),
-        ),
-      );
-    } else if (index > 0 && index % 2 == 0) {
-      return Container(
-        height: 10,
-        width: 10,
-        color: Colors.red,
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        elevation: 16,
-        child: SizedBox(
-          height: 50,
-          width: 50,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('$index'),
-          ),
         ),
       ),
     );
